@@ -1,7 +1,7 @@
-from oasisclient.common import utils
+from oasisclient.common import cliutils
 
 
-@utils.arg('--policy',
+@cliutils.arg('--policy',
            metavar='<policy>',
            help='VM policy to create.')
 def do_policy_delete(cs, args):
@@ -14,7 +14,7 @@ def do_policy_list(cs, args):
     """Print a list of policy."""
     pass
 
-@utils.arg('policy',
+@cliutils.arg('policy',
            metavar='<policy>',
            nargs='+',
            help='ID or name of the (policy)s to delete.')

@@ -7,7 +7,7 @@ from oslo_utils import importutils
 import six
 from oasisclient import version
 from oasisclient.v1 import shell as shell_v1
-from oasisclient.common import utils
+from oasisclient.common import cliutils
 from oasisclient.common.apiclient import exceptions
 from oasisclient.common.apiclient.exceptions import *
 from oasisclient import exceptions as exc
@@ -75,7 +75,7 @@ class OasisShell(object):
 
         parser.add_argument('--oasis-api-version',
                             metavar='<oasis-api-ver>',
-                            default=utils.env(
+                            default=cliutils.env(
                                 'OASIS_API_VERSION',
                                 default=DEFAULT_API_VERSION),
                             help='Accepts "api", '
@@ -86,75 +86,75 @@ class OasisShell(object):
 
         parser.add_argument('--os-auth-url',
                             metavar='<auth-auth-url>',
-                            default=utils.env('OS_AUTH_URL', default=None),
+                            default=cliutils.env('OS_AUTH_URL', default=None),
                             help='Defaults to env[OS_AUTH_URL].')
 
         parser.add_argument('--os-user-id',
                             metavar='<auth-user-id>',
-                            default=utils.env('OS_USER_ID', default=None),
+                            default=cliutils.env('OS_USER_ID', default=None),
                             help='Defaults to env[OS_USER_ID].')
 
         parser.add_argument('--os-username',
                             metavar='<auth-username>',
-                            default=utils.env('OS_USERNAME', default=None),
+                            default=cliutils.env('OS_USERNAME', default=None),
                             help='Defaults to env[OS_USERNAME].')
 
         parser.add_argument('--os-user-domain-id',
                             metavar='<auth-user-domain-id>',
-                            default=utils.env('OS_USER_DOMAIN_ID',
+                            default=cliutils.env('OS_USER_DOMAIN_ID',
                                                  default=None),
                             help='Defaults to env[OS_USER_DOMAIN_ID].')
 
         parser.add_argument('--os-user-domain-name',
                             metavar='<auth-user-domain-name>',
-                            default=utils.env('OS_USER_DOMAIN_NAME',
+                            default=cliutils.env('OS_USER_DOMAIN_NAME',
                                                  default=None),
                             help='Defaults to env[OS_USER_DOMAIN_NAME].')
 
         parser.add_argument('--os-project-id',
                             metavar='<auth-project-id>',
-                            default=utils.env('OS_PROJECT_ID',
+                            default=cliutils.env('OS_PROJECT_ID',
                                                  default=None),
                             help='Defaults to env[OS_PROJECT_ID].')
 
         parser.add_argument('--os-project-name',
                             metavar='<auth-project-name>',
-                            default=utils.env('OS_PROJECT_NAME',
+                            default=cliutils.env('OS_PROJECT_NAME',
                                                  default=None),
                             help='Defaults to env[OS_PROJECT_NAME].')
 
         parser.add_argument('--os-tenant-id',
                             metavar='<auth-tenant-id>',
-                            default=utils.env('OS_TENANT_ID',
+                            default=cliutils.env('OS_TENANT_ID',
                                                  default=None),
                             help=argparse.SUPPRESS)
 
         parser.add_argument('--os-tenant-name',
                             metavar='<auth-tenant-name>',
-                            default=utils.env('OS_TENANT_NAME',
+                            default=cliutils.env('OS_TENANT_NAME',
                                                  default=None),
                             help=argparse.SUPPRESS)
 
         parser.add_argument('--os-project-domain-id',
                             metavar='<auth-project-domain-id>',
-                            default=utils.env('OS_PROJECT_DOMAIN_ID',
+                            default=cliutils.env('OS_PROJECT_DOMAIN_ID',
                                                  default=None),
                             help='Defaults to env[OS_PROJECT_DOMAIN_ID].')
 
         parser.add_argument('--os-project-domain-name',
                             metavar='<auth-project-domain-name>',
-                            default=utils.env('OS_PROJECT_DOMAIN_NAME',
+                            default=cliutils.env('OS_PROJECT_DOMAIN_NAME',
                                                  default=None),
                             help='Defaults to env[OS_PROJECT_DOMAIN_NAME].')
 
         parser.add_argument('--os-token',
                             metavar='<auth-token>',
-                            default=utils.env('OS_TOKEN', default=None),
+                            default=cliutils.env('OS_TOKEN', default=None),
                             help='Defaults to env[OS_TOKEN].')
 
         parser.add_argument('--os-password',
                             metavar='<auth-password>',
-                            default=utils.env('OS_PASSWORD',
+                            default=cliutils.env('OS_PASSWORD',
                                                  default=None),
                             help='Defaults to env[OS_PASSWORD].')
 
@@ -167,31 +167,31 @@ class OasisShell(object):
 
         parser.add_argument('--endpoint-type',
                             metavar='<endpoint-type>',
-                            default=utils.env('OS_ENDPOINT_TYPE',
+                            default=cliutils.env('OS_ENDPOINT_TYPE',
                                                  default=None),
                             help=argparse.SUPPRESS)
 
         parser.add_argument('--os-endpoint-type',
                             metavar='<os-endpoint-type>',
-                            default=utils.env('OS_ENDPOINT_TYPE',
+                            default=cliutils.env('OS_ENDPOINT_TYPE',
                                                  default=None),
                             help='Defaults to env[OS_ENDPOINT_TYPE]')
 
         parser.add_argument('--os-interface',
                             metavar='<os-interface>',
-                            default=utils.env(
+                            default=cliutils.env(
                                 'OS_INTERFACE',
                                 default=DEFAULT_INTERFACE),
                             help=argparse.SUPPRESS)
 
         parser.add_argument('--os-cloud',
                             metavar='<auth-cloud>',
-                            default=utils.env('OS_CLOUD', default=None),
+                            default=cliutils.env('OS_CLOUD', default=None),
                             help='Defaults to env[OS_CLOUD].')
 
         parser.add_argument('--bypass-url',
                             metavar='<bypass-url>',
-                            default=utils.env('BYPASS_URL', default=None),
+                            default=cliutils.env('BYPASS_URL', default=None),
                             dest='bypass_url',
                             help=argparse.SUPPRESS)
         parser.add_argument('--bypass_url',
@@ -313,7 +313,7 @@ class OasisShell(object):
         args.os_project_id = (args.os_project_id or args.os_tenant_id)
         args.os_project_name = (args.os_project_name or args.os_tenant_name)
 
-        if not utils.isunauthenticated(args.func):
+        if not cliutils.isunauthenticated(args.func):
             if (not (args.os_token and
                      (args.os_auth_url or args.os_endpoint_override)) and
                 not args.os_cloud
@@ -348,6 +348,8 @@ class OasisShell(object):
         except KeyError:
             client = client_v1
 
+        # print args
+
         self.cs = client.Client(
             cloud=args.os_cloud,
             user_id=args.os_user_id,
@@ -362,10 +364,10 @@ class OasisShell(object):
             project_domain_name=args.os_project_domain_name,
             auth_url=args.os_auth_url,
             service_type=args.service_type,
-            region_name=args.os_region_name,
-            oasis_url=args.os_endpoint_override,
-            interface=args.os_interface,
-            insecure=args.insecure,
+            # region_name=args.os_region_name,
+            # oasis_url=args.os_endpoint_override,
+            # interface=args.os_interface,
+            # insecure=args.insecure,
         )
 
         args.func(self.cs, args)
@@ -387,7 +389,7 @@ class OasisShell(object):
         commands.remove('bash_completion')
         print(' '.join(commands | options))
 
-    @utils.arg('command', metavar='<subcommand>', nargs='?',
+    @cliutils.arg('command', metavar='<subcommand>', nargs='?',
                   help='Display help for <subcommand>.')
     def do_help(self, args):
         """Display help about this program or one of its subcommands."""
@@ -412,13 +414,16 @@ class OpenStackHelpFormatter(argparse.HelpFormatter):
 
 
 def main():
-#    try:
-        OasisShell().main(map(encodeutils.safe_decode, sys.argv[1:]))
+    # from oasis.cmd import api
+    # api.main()
+   # try:
+    OasisShell().main(map(encodeutils.safe_decode, sys.argv[1:]))
 
-#    except Exception as e:
-#        logger.debug(e, exc_info=1)
-#        print("ERROR: %s" % encodeutils.safe_encode(six.text_type(e)))
-#        sys.exit(1)
+   # except Exception as e:
+   #     logger.debug(e, exc_info=1)
+   #     print("ERROR: %s" % encodeutils.safe_encode(six.text_type(e)))
+   #     sys.exit(1)
 
 if __name__ == "__main__":
+
     main()
