@@ -5,13 +5,13 @@ from oasisclient.common import utils
            metavar='<function>',
            help='Name of the baymodel to create.')
 def do_function_delete(cs, args):
-    """Create a baymodel."""
+    """Create a function."""
     pass
 
 
 
 def do_function_list(cs, args):
-    """Print a list of available bays."""
+    """Print a list of functions."""
     pass
 
 @utils.arg('function',
@@ -19,6 +19,6 @@ def do_function_list(cs, args):
            nargs='+',
            help='ID or name of the (function)s to delete.')
 def do_function_delete(cs, args):
-    """Delete specified baymodel."""
+    """Delete specified function."""
     pass
 
