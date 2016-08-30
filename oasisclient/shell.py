@@ -82,6 +82,113 @@ class OasisShell(object):
                                  'defaults to env[OASIS_API_VERSION].')
         parser.add_argument('--oasis_api_version',
                             help=argparse.SUPPRESS)
+
+
+        parser.add_argument('--os-auth-url',
+                            metavar='<auth-auth-url>',
+                            default=utils.env('OS_AUTH_URL', default=None),
+                            help='Defaults to env[OS_AUTH_URL].')
+
+        parser.add_argument('--os-user-id',
+                            metavar='<auth-user-id>',
+                            default=utils.env('OS_USER_ID', default=None),
+                            help='Defaults to env[OS_USER_ID].')
+
+        parser.add_argument('--os-username',
+                            metavar='<auth-username>',
+                            default=utils.env('OS_USERNAME', default=None),
+                            help='Defaults to env[OS_USERNAME].')
+
+        parser.add_argument('--os-user-domain-id',
+                            metavar='<auth-user-domain-id>',
+                            default=utils.env('OS_USER_DOMAIN_ID',
+                                                 default=None),
+                            help='Defaults to env[OS_USER_DOMAIN_ID].')
+
+        parser.add_argument('--os-user-domain-name',
+                            metavar='<auth-user-domain-name>',
+                            default=utils.env('OS_USER_DOMAIN_NAME',
+                                                 default=None),
+                            help='Defaults to env[OS_USER_DOMAIN_NAME].')
+
+        parser.add_argument('--os-project-id',
+                            metavar='<auth-project-id>',
+                            default=utils.env('OS_PROJECT_ID',
+                                                 default=None),
+                            help='Defaults to env[OS_PROJECT_ID].')
+
+        parser.add_argument('--os-project-name',
+                            metavar='<auth-project-name>',
+                            default=utils.env('OS_PROJECT_NAME',
+                                                 default=None),
+                            help='Defaults to env[OS_PROJECT_NAME].')
+
+        parser.add_argument('--os-tenant-id',
+                            metavar='<auth-tenant-id>',
+                            default=utils.env('OS_TENANT_ID',
+                                                 default=None),
+                            help=argparse.SUPPRESS)
+
+        parser.add_argument('--os-tenant-name',
+                            metavar='<auth-tenant-name>',
+                            default=utils.env('OS_TENANT_NAME',
+                                                 default=None),
+                            help=argparse.SUPPRESS)
+
+        parser.add_argument('--os-project-domain-id',
+                            metavar='<auth-project-domain-id>',
+                            default=utils.env('OS_PROJECT_DOMAIN_ID',
+                                                 default=None),
+                            help='Defaults to env[OS_PROJECT_DOMAIN_ID].')
+
+        parser.add_argument('--os-project-domain-name',
+                            metavar='<auth-project-domain-name>',
+                            default=utils.env('OS_PROJECT_DOMAIN_NAME',
+                                                 default=None),
+                            help='Defaults to env[OS_PROJECT_DOMAIN_NAME].')
+
+        parser.add_argument('--os-token',
+                            metavar='<auth-token>',
+                            default=utils.env('OS_TOKEN', default=None),
+                            help='Defaults to env[OS_TOKEN].')
+
+        parser.add_argument('--os-password',
+                            metavar='<auth-password>',
+                            default=utils.env('OS_PASSWORD',
+                                                 default=None),
+                            help='Defaults to env[OS_PASSWORD].')
+
+        parser.add_argument('--service-type',
+                            metavar='<service-type>',
+                            help='Defaults to container-infra for all '
+                                 'actions.')
+        parser.add_argument('--service_type',
+                            help=argparse.SUPPRESS)
+
+        parser.add_argument('--endpoint-type',
+                            metavar='<endpoint-type>',
+                            default=utils.env('OS_ENDPOINT_TYPE',
+                                                 default=None),
+                            help=argparse.SUPPRESS)
+
+        parser.add_argument('--os-endpoint-type',
+                            metavar='<os-endpoint-type>',
+                            default=utils.env('OS_ENDPOINT_TYPE',
+                                                 default=None),
+                            help='Defaults to env[OS_ENDPOINT_TYPE]')
+
+        parser.add_argument('--os-interface',
+                            metavar='<os-interface>',
+                            default=utils.env(
+                                'OS_INTERFACE',
+                                default=DEFAULT_INTERFACE),
+                            help=argparse.SUPPRESS)
+
+        parser.add_argument('--os-cloud',
+                            metavar='<auth-cloud>',
+                            default=utils.env('OS_CLOUD', default=None),
+                            help='Defaults to env[OS_CLOUD].')
+
         return parser
 
     def _add_bash_completion_subparser(self, subparsers):
