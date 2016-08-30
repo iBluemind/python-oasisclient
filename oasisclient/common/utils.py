@@ -21,7 +21,6 @@ import requests
 import six
 from six.moves import urllib
 import yaml
-import yaql
 
 from oasisclient.i18n import _
 
