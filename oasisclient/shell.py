@@ -34,6 +34,39 @@ class OasisShell(object):
         logging.getLogger('iso8601').setLevel(logging.WARNING)
         logging.getLogger('urllib3.connectionpool').setLevel(logging.WARNING)
 
+    def _add_bash_completion_subparser(self, subparsers):
+        subparser = (
+            subparsers.add_parser('bash_completion',
+                                  add_help=False,
+                                  formatter_class=OpenStackHelpFormatter)
+        )
+        self.subcommands['bash_completion'] = subparser
+        subparser.set_defaults(func=self.do_bash_completion)
+
+    def _find_actions(self, subparsers, actions_module):
+        for attr in (a for a in dir(actions_module) if a.startswith('do_')):
+            # I prefer to be hyphen-separated instead of underscores.
+            command = attr[3:].replace('_', '-')
+            callback = getattr(actions_module, attr)
+            desc = callback.__doc__ or ''
+            action_help = desc.strip()
+            arguments = getattr(callback, 'arguments', [])
+
+            subparser = (
+                subparsers.add_parser(command,
+                                      help=action_help,
+                                      description=desc,
+                                      add_help=False,
+                                      formatter_class=OpenStackHelpFormatter)
+            )
+            subparser.add_argument('-h', '--help',
+                                   action='help',
+                                   help=argparse.SUPPRESS,)
+            self.subcommands[command] = subparser
+            for (args, kwargs) in arguments:
+                subparser.add_argument(*args, **kwargs)
+            subparser.set_defaults(func=callback)
+
     def get_base_parser(self):
         parser = argparse.ArgumentParser(
             prog='oasis',
@@ -155,6 +188,12 @@ class OasisShell(object):
         except KeyError:
             client = client_v1
 
+# I'm picky about my shell help.
+class OpenStackHelpFormatter(argparse.HelpFormatter):
+    def start_section(self, heading):
+        # Title-case the headings
+        heading = '%s%s' % (heading[0].upper(), heading[1:])
+        super(OpenStackHelpFormatter, self).start_section(heading)
 
 def main():
     try:
