@@ -16,3 +16,17 @@
 from keystoneauth1.exceptions import catalog
 from keystoneauth1 import session as ksa_session
 import os_client_config
+
+DEFAULT_SERVICE_TYPE = 'oasis'
+
+class Client(object):
+    def __init__(self, username=None, api_key=None, project_id=None,
+                 project_name=None, auth_url=None, magnum_url=None,
+                 endpoint_type=None, endpoint_override=None,
+                 service_type=DEFAULT_SERVICE_TYPE,
+                 region_name=None, input_auth_token=None,
+                 session=None, password=None, auth_type='password',
+                 interface=None, service_name=None, insecure=False,
+                 user_domain_id=None, user_domain_name=None,
+                 project_domain_id=None, project_domain_name=None,
+                 auth_token=None, timeout=600, **kwargs):
