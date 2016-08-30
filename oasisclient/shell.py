@@ -73,16 +73,25 @@ class OasisShell(object):
                             action='version',
                             version=version.version_info.version_string())
 
-        parser.add_argument('--magnum-api-version',
-                            metavar='<magnum-api-ver>',
+        parser.add_argument('--oasis-api-version',
+                            metavar='<oasis-api-ver>',
                             default=utils.env(
-                                'MAGNUM_API_VERSION',
+                                'OASIS_API_VERSION',
                                 default=DEFAULT_API_VERSION),
                             help='Accepts "api", '
-                                 'defaults to env[MAGNUM_API_VERSION].')
-        parser.add_argument('--magnum_api_version',
+                                 'defaults to env[OASIS_API_VERSION].')
+        parser.add_argument('--oasis_api_version',
                             help=argparse.SUPPRESS)
         return parser
+
+    def _add_bash_completion_subparser(self, subparsers):
+        subparser = (
+            subparsers.add_parser('bash_completion',
+                                  add_help=False,
+                                  formatter_class=OpenStackHelpFormatter)
+        )
+        self.subcommands['bash_completion'] = subparser
+        subparser.set_defaults(func=self.do_bash_completion)
 
     def get_subcommand_parser(self, version):
         parser = self.get_base_parser()
@@ -117,6 +126,29 @@ class OasisShell(object):
             logging.basicConfig(level=logging.CRITICAL,
                                 format=streamformat)
 
+    def _find_actions(self, subparsers, actions_module):
+        for attr in (a for a in dir(actions_module) if a.startswith('do_')):
+            # I prefer to be hyphen-separated instead of underscores.
+            command = attr[3:].replace('_', '-')
+            callback = getattr(actions_module, attr)
+            desc = callback.__doc__ or ''
+            action_help = desc.strip()
+            arguments = getattr(callback, 'arguments', [])
+
+            subparser = (
+                subparsers.add_parser(command,
+                                      help=action_help,
+                                      description=desc,
+                                      add_help=False,
+                                      formatter_class=OpenStackHelpFormatter)
+            )
+            subparser.add_argument('-h', '--help',
+                                   action='help',
+                                   help=argparse.SUPPRESS,)
+            self.subcommands[command] = subparser
+            for (args, kwargs) in arguments:
+                subparser.add_argument(*args, **kwargs)
+            subparser.set_defaults(func=callback)
 
     def main(self, argv):
 
@@ -137,63 +169,63 @@ class OasisShell(object):
             spot = argv.index('--endpoint_type')
             argv[spot] = '--endpoint-type'
 
-        # subcommand_parser = (
-        #     self.get_subcommand_parser(options.magnum_api_version)
-        # )
-        # self.parser = subcommand_parser
-        #
-        # if options.help or not argv:
-        #     subcommand_parser.print_help()
-        #     return 0
-        #
-        # args = subcommand_parser.parse_args(argv)
-        #
-        # # Short-circuit and deal with help right away.
-        # # NOTE(jamespage): args.func is not guaranteed with python >= 3.4
-        # if not hasattr(args, 'func') or args.func == self.do_help:
-        #     self.do_help(args)
-        #     return 0
-        # elif args.func == self.do_bash_completion:
-        #     self.do_bash_completion(args)
-        #     return 0
-        #
-        # if not args.service_type:
-        #     args.service_type = DEFAULT_SERVICE_TYPE
-        #
-        # if args.bypass_url:
-        #     args.os_endpoint_override = args.bypass_url
-        #
-        # args.os_project_id = (args.os_project_id or args.os_tenant_id)
-        # args.os_project_name = (args.os_project_name or args.os_tenant_name)
-        #
-        # if not utils.isunauthenticated(args.func):
-        #     if (not (args.os_token and
-        #              (args.os_auth_url or args.os_endpoint_override)) and
-        #         not args.os_cloud
-        #         ):
-        #
-        #         if not (args.os_username or args.os_user_id):
-        #             raise exc.CommandError(
-        #                 "You must provide a username via either --os-username "
-        #                 "or via env[OS_USERNAME]"
-        #             )
-        #         if not args.os_password:
-        #             raise exc.CommandError(
-        #                 "You must provide a password via either "
-        #                 "--os-password, env[OS_PASSWORD], or prompted "
-        #                 "response"
-        #             )
-        #         if (not args.os_project_name and not args.os_project_id):
-        #             raise exc.CommandError(
-        #                 "You must provide a project name or project id via "
-        #                 "--os-project-name, --os-project-id, "
-        #                 "env[OS_PROJECT_NAME] or env[OS_PROJECT_ID]"
-        #             )
-        #         if not args.os_auth_url:
-        #             raise exc.CommandError(
-        #                 "You must provide an auth url via either "
-        #                 "--os-auth-url or via env[OS_AUTH_URL]"
-        #             )
+        subcommand_parser = (
+            self.get_subcommand_parser(options.oasis_api_version)
+        )
+        self.parser = subcommand_parser
+
+        if options.help or not argv:
+            subcommand_parser.print_help()
+            return 0
+
+        args = subcommand_parser.parse_args(argv)
+
+        # Short-circuit and deal with help right away.
+        # NOTE(jamespage): args.func is not guaranteed with python >= 3.4
+        if not hasattr(args, 'func') or args.func == self.do_help:
+            self.do_help(args)
+            return 0
+        elif args.func == self.do_bash_completion:
+            self.do_bash_completion(args)
+            return 0
+
+        if not args.service_type:
+            args.service_type = DEFAULT_SERVICE_TYPE
+
+        if args.bypass_url:
+            args.os_endpoint_override = args.bypass_url
+
+        args.os_project_id = (args.os_project_id or args.os_tenant_id)
+        args.os_project_name = (args.os_project_name or args.os_tenant_name)
+
+        if not utils.isunauthenticated(args.func):
+            if (not (args.os_token and
+                     (args.os_auth_url or args.os_endpoint_override)) and
+                not args.os_cloud
+                ):
+
+                if not (args.os_username or args.os_user_id):
+                    raise exc.CommandError(
+                        "You must provide a username via either --os-username "
+                        "or via env[OS_USERNAME]"
+                    )
+                if not args.os_password:
+                    raise exc.CommandError(
+                        "You must provide a password via either "
+                        "--os-password, env[OS_PASSWORD], or prompted "
+                        "response"
+                    )
+                if (not args.os_project_name and not args.os_project_id):
+                    raise exc.CommandError(
+                        "You must provide a project name or project id via "
+                        "--os-project-name, --os-project-id, "
+                        "env[OS_PROJECT_NAME] or env[OS_PROJECT_ID]"
+                    )
+                if not args.os_auth_url:
+                    raise exc.CommandError(
+                        "You must provide an auth url via either "
+                        "--os-auth-url or via env[OS_AUTH_URL]"
+                    )
         try:
             client = {
                 '1': client_v1,
@@ -222,6 +254,40 @@ class OasisShell(object):
         )
 
         args.func(self.cs, args)
+
+    def do_bash_completion(self, _args):
+        """Prints arguments for bash-completion.
+
+        Prints all of the commands and options to stdout so that the
+        magnum.bash_completion script doesn't have to hard code them.
+        """
+        commands = set()
+        options = set()
+        for sc_str, sc in self.subcommands.items():
+            commands.add(sc_str)
+            for option in sc._optionals._option_string_actions.keys():
+                options.add(option)
+
+        commands.remove('bash-completion')
+        commands.remove('bash_completion')
+        print(' '.join(commands | options))
+
+    @utils.arg('command', metavar='<subcommand>', nargs='?',
+                  help='Display help for <subcommand>.')
+    def do_help(self, args):
+        """Display help about this program or one of its subcommands."""
+        # NOTE(jamespage): args.command is not guaranteed with python >= 3.4
+        command = getattr(args, 'command', '')
+
+        if command:
+            if args.command in self.subcommands:
+                self.subcommands[args.command].print_help()
+            else:
+                raise exc.CommandError("'%s' is not a valid subcommand" %
+                                       args.command)
+        else:
+            self.parser.print_help()
+
 # I'm picky about my shell help.
 class OpenStackHelpFormatter(argparse.HelpFormatter):
     def start_section(self, heading):
