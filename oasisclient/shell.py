@@ -18,6 +18,8 @@ DEFAULT_API_VERSION = '1'
 DEFAULT_INTERFACE = 'public'
 DEFAULT_SERVICE_TYPE = 'container-infra'
 
+logger = logging.getLogger(__name__)
+
 class HelpFormatter(argparse.HelpFormatter):
     def start_section(self, heading):
         # Title-case the headings
@@ -154,22 +156,14 @@ class OasisShell(object):
             client = client_v1
 
 
-def main(args=None):
+def main():
     try:
-        if args is None:
-            args = sys.argv[1:]
+        OasisShell().main(map(encodeutils.safe_decode, sys.argv[1:]))
 
-        OasisShell().main(args)
-    except KeyboardInterrupt:
-        print _("... terminating oasis client", file=sys.stderr)
-        sys.exit(130)
     except Exception as e:
-        if '--debug' in args or '-d' in args:
-            raise
-        else:
-            print _(encodeutils.safe_encode(six.text_type(e)), file=sys.stderr)
+        logger.debug(e, exc_info=1)
+        print("ERROR: %s" % encodeutils.safe_encode(six.text_type(e)))
         sys.exit(1)
-
 
 if __name__ == "__main__":
     main()
