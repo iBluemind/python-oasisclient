@@ -6,7 +6,7 @@ from oslo_utils import encodeutils
 from oslo_utils import importutils
 import six
 from oasisclient import version
-from oasisclient import v1 as shell_v1
+from oasisclient.v1 import shell as shell_v1
 from oasisclient.common import utils
 from oasisclient.common.apiclient import exceptions
 from oasisclient.common.apiclient.exceptions import *
