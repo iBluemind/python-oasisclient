@@ -73,6 +73,15 @@ class OasisShell(object):
                             action='version',
                             version=version.version_info.version_string())
 
+        parser.add_argument('--magnum-api-version',
+                            metavar='<magnum-api-ver>',
+                            default=utils.env(
+                                'MAGNUM_API_VERSION',
+                                default=DEFAULT_API_VERSION),
+                            help='Accepts "api", '
+                                 'defaults to env[MAGNUM_API_VERSION].')
+        parser.add_argument('--magnum_api_version',
+                            help=argparse.SUPPRESS)
         return parser
 
     def get_subcommand_parser(self, version):
@@ -188,7 +197,7 @@ class OasisShell(object):
         try:
             client = {
                 '1': client_v1,
-            }[options.magnum_api_version]
+            }[options.oasis_api_version]
         except KeyError:
             client = client_v1
 
@@ -207,7 +216,7 @@ class OasisShell(object):
             auth_url=args.os_auth_url,
             service_type=args.service_type,
             region_name=args.os_region_name,
-            magnum_url=args.os_endpoint_override,
+            oasis_url=args.os_endpoint_override,
             interface=args.os_interface,
             insecure=args.insecure,
         )
