@@ -189,6 +189,14 @@ class OasisShell(object):
                             default=utils.env('OS_CLOUD', default=None),
                             help='Defaults to env[OS_CLOUD].')
 
+        parser.add_argument('--bypass-url',
+                            metavar='<bypass-url>',
+                            default=utils.env('BYPASS_URL', default=None),
+                            dest='bypass_url',
+                            help=argparse.SUPPRESS)
+        parser.add_argument('--bypass_url',
+                            help=argparse.SUPPRESS)
+
         return parser
 
     def _add_bash_completion_subparser(self, subparsers):
@@ -366,7 +374,7 @@ class OasisShell(object):
         """Prints arguments for bash-completion.
 
         Prints all of the commands and options to stdout so that the
-        magnum.bash_completion script doesn't have to hard code them.
+        oasis.bash_completion script doesn't have to hard code them.
         """
         commands = set()
         options = set()
