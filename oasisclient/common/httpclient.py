@@ -324,7 +324,7 @@ class SessionClient(adapter.LegacyJsonAdapter):
         # r = requests.get(url)
         # print r.status_code
 
-        resp = self.session.request('http://172.16.176.145:9417/function', method,
+        resp = self.session.request('http://172.16.176.149:9417/v1', method,
                                     raise_exc=False, **kwargs)
 
         if 400 <= resp.status_code < 600:

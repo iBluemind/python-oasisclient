@@ -20,6 +20,9 @@ import os_client_config
 from oasisclient.v1 import functions
 from oasisclient.common import httpclient
 from oasisclient.v1 import policy
+from oasisclient.v1 import nodepool
+from oasisclient.v1 import nodepoolpolicy
+
 
 DEFAULT_SERVICE_TYPE = 'oasis'
 LEGACY_DEFAULT_SERVICE_TYPE = 'oasis'
@@ -117,3 +120,5 @@ class Client(object):
 
         self.function = functions.FunctionManager(self.http_client)
         self.policy = policy.PolicyManager(self.http_client)
+        self.nodepool = nodepool.NodePoolManager(self.http_client)
+        self.nodepool_policy = nodepoolpolicy.NodePoolPolicyManager(self.http_client)
