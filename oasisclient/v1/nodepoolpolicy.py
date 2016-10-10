@@ -12,7 +12,7 @@ class NodePoolPolicyManager(base.Manager):
 
     @staticmethod
     def _path(id=None):
-        return '/v1/nodepoolpolicy/%s' % id if id else '/v1/nodepoolpolicy'
+        return '/v1/nodepool_policies/%s' % id if id else '/v1/nodepool_policies'
 
     def list(self, limit=None, marker=None, sort_key=None,
              sort_dir=None, detail=False):
@@ -51,9 +51,9 @@ class NodePoolPolicyManager(base.Manager):
             path += '?' + '&'.join(filters)
 
         if limit is None:
-            return self._list(self._path(path), "nodepoolpolicy")
+            return self._list(self._path(path), "nodepool_policies")
         else:
-            return self._list_pagination(self._path(path), "nodepoolpolicy", limit=limit)
+            return self._list_pagination(self._path(path), "nodepool_policies", limit=limit)
 
     def create(self, **param):
         return self._create(self._path(), param)
@@ -64,11 +64,14 @@ class NodePoolPolicyManager(base.Manager):
         except IndexError:
             return None
 
-    def update(self, id, param):
+    def update(self, id, **param):
         try:
             return self._update(self._path(id), param)
         except IndexError:
             return None
+
+    def delete(self, id):
+        return self._delete(self._path(id))
 
     def test(self):
         try:

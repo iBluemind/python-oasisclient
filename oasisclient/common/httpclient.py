@@ -212,10 +212,8 @@ class HTTPClient(object):
 
         if 'body' in kwargs:
             kwargs['body'] = json.dumps(kwargs['body'])
-
         resp, body_iter = self._http_request(url, method, **kwargs)
         content_type = resp.getheader('content-type', None)
-
         if resp.status == 204 or resp.status == 205 or content_type is None:
             return resp, list()
 
@@ -319,14 +317,15 @@ class SessionClient(adapter.LegacyJsonAdapter):
         endpoint_filter.setdefault('interface', self.interface)
         endpoint_filter.setdefault('service_type', self.service_type)
         endpoint_filter.setdefault('region_name', self.region_name)
-        # print url
+
         # import requests
         # r = requests.get(url)
         # print r.status_code
 
-        resp = self.session.request('http://172.16.176.149:9417/v1', method,
+        resp = self.session.request('http://172.16.176.149:9417/v1' + url, method,
                                     raise_exc=False, **kwargs)
-
+        print '$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$resp$$$$$$$$$$$$$$$$$$$$$$'
+        print resp
         if 400 <= resp.status_code < 600:
             error_json = _extract_error_json(resp.content)
             raise exceptions.from_response(

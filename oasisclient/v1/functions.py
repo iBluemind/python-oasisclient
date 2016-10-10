@@ -1,17 +1,22 @@
 from oasisclient.common import base
 from oasisclient.common import utils
 
+import logging
+
+LOG = logging.getLogger(__name__)
+
+
 class Function(base.Resource):
     def __repr__(self):
         return "<Function %s>" % self._info
 
 
-class FunctionManager(base.Manager) :
+class FunctionManager(base.Manager):
     resource_class = Function
 
     @staticmethod
     def _path(id=None):
-        return '/v1/function/%s' % id if id else '/v1/function'
+        return '/v1/functions/%s' % id if id else '/v1/functions'
 
     def list(self, limit=None, marker=None, sort_key=None,
              sort_dir=None, detail=False):
@@ -50,11 +55,12 @@ class FunctionManager(base.Manager) :
             path += '?' + '&'.join(filters)
 
         if limit is None:
-            return self._list(self._path(path), "function")
+            return self._list(self._path(path), "functions")
         else:
-            return self._list_pagination(self._path(path), "function", limit=limit)
+            return self._list_pagination(self._path(path), "functions", limit=limit)
 
     def create(self, **param):
+        LOG.debug('create!!!!!')
         return self._create(self._path(), param)
 
     def get(self, id):
@@ -63,8 +69,14 @@ class FunctionManager(base.Manager) :
         except IndexError:
             return None
 
+    def delete(self, id):
+        return self._delete(self._path(id))
+
+    def update(self, id, patch):
+        return self._update(self._path(id), patch)
+
     def test(self):
         try:
             return self._test('/')
-        except Exception :
+        except Exception:
             return 'Test Connect Error'

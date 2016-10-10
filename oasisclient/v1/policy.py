@@ -18,5 +18,8 @@ class PolicyManager(base.Manager):
         except IndexError:
             return None
 
+    def delete(self, id):
+        return self._delete(self._path(id))
+
     def update(self, **param):
         return self._update(self._path(), param)

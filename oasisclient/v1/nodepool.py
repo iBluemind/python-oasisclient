@@ -12,7 +12,7 @@ class NodePoolManager(base.Manager):
 
     @staticmethod
     def _path(id=None):
-        return '/v1/nodepool/%s' % id if id else '/v1/nodepool'
+        return '/v1/nodepools/%s' % id if id else '/v1/nodepools'
 
     def list(self, limit=None, marker=None, sort_key=None,
              sort_dir=None, detail=False):
@@ -51,9 +51,9 @@ class NodePoolManager(base.Manager):
             path += '?' + '&'.join(filters)
 
         if limit is None:
-            return self._list(self._path(path), "nodepool")
+            return self._list(self._path(path), "nodepools")
         else:
-            return self._list_pagination(self._path(path), "nodepool", limit=limit)
+            return self._list_pagination(self._path(path), "nodepools", limit=limit)
 
     def create(self, **param):
         return self._create(self._path(), param)
@@ -63,6 +63,12 @@ class NodePoolManager(base.Manager):
             return self._list(self._path(id))[0]
         except IndexError:
             return None
+
+    def delete(self, id):
+        return self._delete(self._path(id))
+
+    def update(self, id, patch):
+        return self._update(self._path(id), patch)
 
     def test(self):
         try:

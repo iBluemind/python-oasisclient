@@ -30,6 +30,7 @@ class Manager(object):
         self.api = api
 
     def _create(self, url, body):
+        print 'url : ' + url
         resp, body = self.api.json_request('POST', url, body=body)
         if body:
             return self.resource_class(self, body)
