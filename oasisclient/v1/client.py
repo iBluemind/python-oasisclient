@@ -22,6 +22,7 @@ from oasisclient.common import httpclient
 from oasisclient.v1 import policy
 from oasisclient.v1 import nodepool
 from oasisclient.v1 import nodepoolpolicy
+from oasisclient.v1 import endpoint
 
 
 DEFAULT_SERVICE_TYPE = 'oasis'
@@ -122,3 +123,4 @@ class Client(object):
         self.policy = policy.PolicyManager(self.http_client)
         self.nodepool = nodepool.NodePoolManager(self.http_client)
         self.nodepool_policy = nodepoolpolicy.NodePoolPolicyManager(self.http_client)
+        self.endpoint = endpoint.EndpointManager(self.http_client)
