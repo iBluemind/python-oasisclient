@@ -23,7 +23,12 @@ from oasisclient.v1 import policy
 from oasisclient.v1 import nodepool
 from oasisclient.v1 import nodepoolpolicy
 from oasisclient.v1 import endpoint
-
+from oasisclient.v1 import httpapi
+from oasisclient.v1 import request
+from oasisclient.v1 import requestheader
+from oasisclient.v1 import response
+from oasisclient.v1 import responsecode
+from oasisclient.v1 import responsemessage
 
 DEFAULT_SERVICE_TYPE = 'oasis'
 LEGACY_DEFAULT_SERVICE_TYPE = 'oasis'
@@ -124,3 +129,9 @@ class Client(object):
         self.nodepool = nodepool.NodePoolManager(self.http_client)
         self.nodepool_policy = nodepoolpolicy.NodePoolPolicyManager(self.http_client)
         self.endpoint = endpoint.EndpointManager(self.http_client)
+        self.request = request.RequestManager(self.http_client)
+        self.request_header = requestheader.RequestHeaderManager(self.http_client)
+        self.response = response.ResponseManager(self.http_client)
+        self.response_code = responsecode.ResponseCodeManager(self.http_client)
+        self.httpapi = httpapi.HttpApiManager(self.http_client)
+        self.response_message = responsemessage.ResponseMessageManager(self.http_client)
