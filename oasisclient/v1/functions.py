@@ -1,7 +1,9 @@
 from oasisclient.common import base
 from oasisclient.common import utils
 
+import jsonpatch
 import logging
+import json
 
 LOG = logging.getLogger(__name__)
 
@@ -72,8 +74,21 @@ class FunctionManager(base.Manager):
     def delete(self, id):
         return self._delete(self._path(id))
 
-    def update(self, id, patch):
-        return self._update(self._path(id), patch)
+    def update(self, id, param):
+
+        original_function = self.get(id).to_dict()
+        # original_function['nodepool_id']='123124443545asf234'
+        del original_function['user_id']
+        del original_function['created_at']
+        del original_function['updated_at']
+        del original_function['id']
+        del original_function['project_id']
+        del original_function['nodepool_id']
+        LOG.debug(original_function)
+        LOG.debug(param)
+        patch = jsonpatch.JsonPatch.from_diff(original_function, param)
+        LOG.debug(str(patch))
+        return self._update(self._path(id), json.loads(str(patch)))
 
     def test(self):
         try:

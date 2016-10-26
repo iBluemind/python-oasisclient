@@ -1,6 +1,9 @@
 from oasisclient.common import base
 from oasisclient.common import utils
 
+import jsonpatch
+import json
+
 
 class NodePool(base.Resource):
     def __repr__(self):
@@ -67,8 +70,13 @@ class NodePoolManager(base.Manager):
     def delete(self, id):
         return self._delete(self._path(id))
 
-    def update(self, id, patch):
-        return self._update(self._path(id), patch)
+    def update(self, id, **param):
+        original_nodepool = self.get(id).to_dict()
+        del original_nodepool['created_at']
+        del original_nodepool['updated_at']
+        del original_nodepool['id']
+        patch = jsonpatch.JsonPatch.from_diff(original_nodepool, param)
+        return self._update(self._path(id), json.loads(str(patch)))
 
     def test(self):
         try:

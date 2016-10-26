@@ -1,6 +1,7 @@
 from oasisclient.common import base
 from oasisclient.common import utils
-
+import jsonpatch
+import json
 
 class NodePoolPolicy(base.Resource):
     def __repr__(self):
@@ -65,10 +66,13 @@ class NodePoolPolicyManager(base.Manager):
             return None
 
     def update(self, id, **param):
-        try:
-            return self._update(self._path(id), param)
-        except IndexError:
-            return None
+        original_policy = self.get(id).to_dict()
+        del original_policy['created_at']
+        del original_policy['updated_at']
+        del original_policy['id']
+
+        patch = jsonpatch.JsonPatch.from_diff(original_policy, param)
+        return self._update(self._path(id), json.loads(str(patch)))
 
     def delete(self, id):
         return self._delete(self._path(id))
