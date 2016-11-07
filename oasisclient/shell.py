@@ -405,6 +405,7 @@ class OasisShell(object):
         else:
             self.parser.print_help()
 
+
 # I'm picky about my shell help.
 class OpenStackHelpFormatter(argparse.HelpFormatter):
     def start_section(self, heading):

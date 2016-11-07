@@ -65,7 +65,7 @@ class HttpApiManager(base.Manager):
 
     def get(self, id):
         try:
-            return self._list(self._path(id))[0]
+            return self._list(self._path(id), "httpapis")
         except IndexError:
             return None
 

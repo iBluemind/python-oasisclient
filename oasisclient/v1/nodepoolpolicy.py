@@ -70,7 +70,8 @@ class NodePoolPolicyManager(base.Manager):
         del original_policy['created_at']
         del original_policy['updated_at']
         del original_policy['id']
-
+        del original_policy['project_id']
+        del original_policy['user_id']
         patch = jsonpatch.JsonPatch.from_diff(original_policy, param)
         return self._update(self._path(id), json.loads(str(patch)))
 

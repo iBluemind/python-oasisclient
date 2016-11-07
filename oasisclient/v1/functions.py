@@ -89,9 +89,3 @@ class FunctionManager(base.Manager):
         patch = jsonpatch.JsonPatch.from_diff(original_function, param)
         LOG.debug(str(patch))
         return self._update(self._path(id), json.loads(str(patch)))
-
-    def test(self):
-        try:
-            return self._test('/')
-        except Exception:
-            return 'Test Connect Error'

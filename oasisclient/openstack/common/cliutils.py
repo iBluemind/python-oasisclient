@@ -30,7 +30,7 @@ import prettytable
 import six
 from six import moves
 
-from oasisclient.i18n import _
+from oasisclient.openstack.common._i18n import _
 
 
 class MissingArgs(Exception):

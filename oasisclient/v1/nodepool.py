@@ -75,6 +75,8 @@ class NodePoolManager(base.Manager):
         del original_nodepool['created_at']
         del original_nodepool['updated_at']
         del original_nodepool['id']
+        del original_nodepool['project_id']
+        del original_nodepool['user_id']
         patch = jsonpatch.JsonPatch.from_diff(original_nodepool, param)
         return self._update(self._path(id), json.loads(str(patch)))
 

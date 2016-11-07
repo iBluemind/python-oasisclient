@@ -23,9 +23,9 @@ def do_function_list(cs, args):
     columns += utils._get_list_table_columns_and_formatters(
         args.fields, functions,
         exclude_fields=(c.lower() for c in columns))[0]
-    utils.print_list(functions, columns,
-                     {'versions': magnum_utils.print_list_field('versions')},
-                     sortby_index=None)
+    # utils.print_list(functions, columns,
+    #                  {'versions': magnum_utils.print_list_field('versions')},
+    #                  sortby_index=None)
 
 @utils.arg('function',
            metavar='<function>',

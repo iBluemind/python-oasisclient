@@ -30,7 +30,7 @@ from oasisclient import exceptions
 from oasisclient.common.apiclient import exc
 
 LOG = logging.getLogger(__name__)
-USER_AGENT = 'python-magnumclient'
+USER_AGENT = 'python-oasisclient'
 CHUNKSIZE = 1024 * 64  # 64kB
 
 API_VERSION = '/v1'
@@ -209,7 +209,8 @@ class HTTPClient(object):
         kwargs.setdefault('headers', {})
         kwargs['headers'].setdefault('Content-Type', 'application/json')
         kwargs['headers'].setdefault('Accept', 'application/json')
-
+        LOG.debug('@@@@@@@@@@@@@@@@@@@@')
+        LOG.debug(kwargs)
         if 'body' in kwargs:
             kwargs['body'] = json.dumps(kwargs['body'])
         resp, body_iter = self._http_request(url, method, **kwargs)
@@ -317,12 +318,13 @@ class SessionClient(adapter.LegacyJsonAdapter):
         endpoint_filter.setdefault('interface', self.interface)
         endpoint_filter.setdefault('service_type', self.service_type)
         endpoint_filter.setdefault('region_name', self.region_name)
-
+        LOG.debug('@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@')
+        LOG.debug(kwargs)
         # import requests
         # r = requests.get(url)
         # print r.status_code
 
-        resp = self.session.request('http://172.16.176.149:9417/v1' + url, method,
+        resp = self.session.request(url, method,
                                     raise_exc=False, **kwargs)
         print '$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$resp$$$$$$$$$$$$$$$$$$$$$$'
         print resp
@@ -347,7 +349,6 @@ class SessionClient(adapter.LegacyJsonAdapter):
             'OpenStack-API-Version', 'container-infra latest')
         if 'body' in kwargs:
             kwargs['data'] = json.dumps(kwargs.pop('body'))
-
         resp = self._http_request(url, method, **kwargs)
         body = resp.content
         content_type = resp.headers.get('content-type', None)
@@ -392,10 +393,10 @@ class ResponseBodyIterator(object):
 def _construct_http_client(*args, **kwargs):
     session = kwargs.pop('session', None)
     auth = kwargs.pop('auth', None)
-
+    print 'session'
     if session:
         # print 'session'
-        service_type = kwargs.pop('service_type', 'baremetal')
+        service_type = kwargs.pop('service_type', 'oasis')
         interface = kwargs.pop('endpoint_type', None)
         region_name = kwargs.pop('region_name', None)
         return SessionClient(session=session,
@@ -405,6 +406,7 @@ def _construct_http_client(*args, **kwargs):
                              region_name=region_name,
                              service_name=None,
                              user_agent='python-oasisclient')
+
     else:
         print 'Http Client'
         return HTTPClient(*args, **kwargs)
