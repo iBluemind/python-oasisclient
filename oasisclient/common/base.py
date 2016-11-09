@@ -120,10 +120,6 @@ class Manager(object):
     def _delete(self, url):
         self.api.raw_request('DELETE', url)
 
-    def _test(self, url):
-        resp, body = self.api.json_request('GET', url)
-        print body
-
 
 class Resource(base.Resource):
     """Represents a particular instance of an object (tenant, user, etc).

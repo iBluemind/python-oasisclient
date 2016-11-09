@@ -74,9 +74,3 @@ class HttpApiManager(base.Manager):
 
     def update(self, id, patch):
         return self._update(self._path(id), patch)
-
-    def test(self):
-        try:
-            return self._test('/')
-        except Exception:
-            return 'Test Connect Error'
