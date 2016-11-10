@@ -65,7 +65,7 @@ class RequestHeaderManager(base.Manager):
 
     def get(self, id):
         try:
-            return self._list(self._path(id))[0]
+            return self._list(self._path(id), "requestheaders")
         except IndexError:
             return None
 
@@ -75,8 +75,3 @@ class RequestHeaderManager(base.Manager):
     def update(self, id, patch):
         return self._update(self._path(id), patch)
 
-    def test(self):
-        try:
-            return self._test('/')
-        except Exception:
-            return 'Test Connect Error'
