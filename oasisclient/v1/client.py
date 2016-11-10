@@ -41,7 +41,7 @@ LOG = logging.getLogger(__name__)
 class Client(object):
     def __init__(self, username=None, api_key=None, project_id=None,
                  project_name=None, auth_url=None, oasis_url=None,
-                 endpoint_type=None, service_type='oasis',
+                 endpoint_type=None, service_type='function',
                  region_name=None, input_auth_token=None,
                  session=None, password=None, auth_type='password',
                  interface='public', service_name=None, insecure=False,
