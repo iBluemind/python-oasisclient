@@ -31,8 +31,8 @@ from oasisclient.v1 import response
 from oasisclient.v1 import responsecode
 from oasisclient.v1 import responsemessage
 
-DEFAULT_SERVICE_TYPE = 'oasis'
-LEGACY_DEFAULT_SERVICE_TYPE = 'oasis'
+DEFAULT_SERVICE_TYPE = 'function'
+LEGACY_DEFAULT_SERVICE_TYPE = 'function'
 
 import logging
 LOG = logging.getLogger(__name__)
