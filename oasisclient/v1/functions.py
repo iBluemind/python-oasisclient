@@ -74,16 +74,14 @@ class FunctionManager(base.Manager):
     def delete(self, id):
         return self._delete(self._path(id))
 
-    def update(self, id, param):
+    def update(self, id, **param):
 
         original_function = self.get(id).to_dict()
-        # original_function['nodepool_id']='123124443545asf234'
         del original_function['user_id']
         del original_function['created_at']
         del original_function['updated_at']
         del original_function['id']
         del original_function['project_id']
-        del original_function['nodepool_id']
         LOG.debug(original_function)
         LOG.debug(param)
         patch = jsonpatch.JsonPatch.from_diff(original_function, param)
